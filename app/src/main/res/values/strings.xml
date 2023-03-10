@@ -1,3 +1,5 @@
 <resources>
-    <string name="app_name">submission one fundamental android dicoding</string>
+    <string name="app_name">Github User App</string>
+    <string name="search">search user</string>
+    <string name="search_hint">jamesfangyauw</string>
 </resources>
