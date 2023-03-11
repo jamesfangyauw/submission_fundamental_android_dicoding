@@ -2,13 +2,13 @@ package com.james.submissiononefundamentalandroiddicoding
 
 import android.app.SearchManager
 import android.content.Context
+import android.content.Intent
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.View
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
-import androidx.recyclerview.widget.DividerItemDecoration
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.james.submissiononefundamentalandroiddicoding.adapter.RecyclerViewAdapter
 import com.james.submissiononefundamentalandroiddicoding.databinding.ActivityMainBinding
@@ -65,9 +65,9 @@ class MainActivity : AppCompatActivity() {
 
     private fun showLoading(isLoading: Boolean) {
         if (isLoading){
-            activityMainBinding.progressBar.visibility = View.VISIBLE
+            activityMainBinding.progressBarActivtiy.visibility = View.VISIBLE
         } else{
-            activityMainBinding.progressBar.visibility = View.GONE
+            activityMainBinding.progressBarActivtiy.visibility = View.GONE
         }
     }
 
@@ -80,5 +80,13 @@ class MainActivity : AppCompatActivity() {
         }
         val adapter = RecyclerViewAdapter(listUser)
         activityMainBinding.rvItem.adapter = adapter
+
+        adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback{
+            override fun onItemClicked(data: ItemsItem) {
+                val intentToDetail = Intent(this@MainActivity, DetailActivity::class.java)
+                intentToDetail.putExtra(DetailActivity.EXTRA_USER, data.login)
+                startActivity(intentToDetail)
+            }
+        })
     }
 }
