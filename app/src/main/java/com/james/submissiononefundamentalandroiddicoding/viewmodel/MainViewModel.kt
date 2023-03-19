@@ -1,5 +1,6 @@
 package com.james.submissiononefundamentalandroiddicoding.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -17,10 +18,6 @@ class MainViewModel : ViewModel() {
 
     private val _listUser = MutableLiveData<List<ItemsItem>>()
     val listUser: LiveData<List<ItemsItem>> = _listUser
-
-    companion object {
-        private const val TAG = "MainViewModel"
-    }
 
     fun searchUser(query: String) {
         _isLoading.value = true
@@ -43,5 +40,9 @@ class MainViewModel : ViewModel() {
                 Log.e(TAG, "onFailure: ${t.message}")
             }
         })
+    }
+
+    companion object {
+        private const val TAG = "MainViewModel"
     }
 }

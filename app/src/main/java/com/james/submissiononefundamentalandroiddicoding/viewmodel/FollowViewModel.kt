@@ -1,5 +1,6 @@
 package com.james.submissiononefundamentalandroiddicoding.viewmodel
 
+import android.app.Application
 import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -20,10 +21,6 @@ class FollowViewModel : ViewModel() {
 
     private val _followers = MutableLiveData<List<ItemsItem>>()
     val followers: LiveData<List<ItemsItem>> = _followers
-
-    companion object {
-        private const val TAG = "FollowViewModel"
-    }
 
     fun getFollowings(username: String) {
         _isLoading.value = true
@@ -74,4 +71,9 @@ class FollowViewModel : ViewModel() {
 
         })
     }
+
+    companion object {
+        private const val TAG = "FollowViewModel"
+    }
+
 }

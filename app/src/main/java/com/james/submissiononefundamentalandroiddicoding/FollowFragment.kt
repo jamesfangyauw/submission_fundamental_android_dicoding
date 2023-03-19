@@ -10,28 +10,26 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.james.submissiononefundamentalandroiddicoding.adapter.RecyclerViewAdapter
 import com.james.submissiononefundamentalandroiddicoding.databinding.FollowFragmentBinding
+import com.james.submissiononefundamentalandroiddicoding.db.UserEntity
 import com.james.submissiononefundamentalandroiddicoding.model.ItemsItem
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.FollowViewModel
 
 
 class FollowFragment : Fragment() {
     private lateinit var followFragmentBinding: FollowFragmentBinding
-
-
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?
     ): View? {
-
-        followFragmentBinding = FollowFragmentBinding.inflate(layoutInflater, container,false)
+        followFragmentBinding = FollowFragmentBinding.inflate(layoutInflater, container, false)
         val followViewModel = ViewModelProvider(
             this,
             ViewModelProvider.NewInstanceFactory()
         ).get(FollowViewModel::class.java)
-        followViewModel.followings.observe(viewLifecycleOwner){followings ->
+        followViewModel.followings.observe(viewLifecycleOwner) { followings ->
             setListFollow(followings)
         }
 
-        followViewModel.followers.observe(viewLifecycleOwner){followers ->
+        followViewModel.followers.observe(viewLifecycleOwner) { followers ->
             setListFollow(followers)
         }
         followViewModel.isLoading.observe(viewLifecycleOwner) {
@@ -50,7 +48,7 @@ class FollowFragment : Fragment() {
             ViewModelProvider.NewInstanceFactory()
         ).get(FollowViewModel::class.java)
 
-        if (index == 1){
+        if (index == 1) {
             followViewModel.getFollowers(username!!)
         } else {
             followViewModel.getFollowings(username!!)
@@ -58,28 +56,29 @@ class FollowFragment : Fragment() {
     }
 
     private fun setListFollow(followings: List<ItemsItem>) {
-        followFragmentBinding.rvItemFragment.layoutManager= LinearLayoutManager(requireActivity())
+        followFragmentBinding.rvItemFragment.layoutManager = LinearLayoutManager(requireActivity())
         val listUser = ArrayList<ItemsItem>()
-        for (user in followings){
-            val item = ItemsItem(user.login,user.avatarUrl)
+        for (user in followings) {
+            val item = ItemsItem(user.login, user.avatarUrl)
             listUser.add(item)
         }
         val adapter = RecyclerViewAdapter(listUser)
         followFragmentBinding.rvItemFragment.adapter = adapter
 
-        adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback{
+        adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ItemsItem) {
+                val user = UserEntity(data.login, data.avatarUrl) as UserEntity
                 val intentToDetail = Intent(activity, DetailActivity::class.java)
-                intentToDetail.putExtra(DetailActivity.EXTRA_USER, data.login)
+                intentToDetail.putExtra(DetailActivity.EXTRA_USER, user)
                 startActivity(intentToDetail)
             }
         })
     }
 
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading){
+        if (isLoading) {
             followFragmentBinding.progressBarFragment.visibility = View.VISIBLE
-        } else{
+        } else {
             followFragmentBinding.progressBarFragment.visibility = View.GONE
         }
     }

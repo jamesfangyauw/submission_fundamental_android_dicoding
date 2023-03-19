@@ -1,36 +1,40 @@
 package com.james.submissiononefundamentalandroiddicoding
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
+import android.widget.Toast.makeText
+import androidx.activity.viewModels
 import androidx.annotation.StringRes
-import androidx.lifecycle.ViewModelProvider
+import androidx.appcompat.app.AppCompatActivity
 import androidx.viewpager2.widget.ViewPager2
 import com.bumptech.glide.Glide
 import com.google.android.material.tabs.TabLayout
 import com.google.android.material.tabs.TabLayoutMediator
 import com.james.submissiononefundamentalandroiddicoding.adapter.SectionsPagerAdapter
 import com.james.submissiononefundamentalandroiddicoding.databinding.ActivityDetailBinding
+import com.james.submissiononefundamentalandroiddicoding.db.UserEntity
 import com.james.submissiononefundamentalandroiddicoding.model.DetailUserResponse
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.DetailViewModel
+import com.james.submissiononefundamentalandroiddicoding.viewmodel.ViewModelFactory
 
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var activityDetailBinding: ActivityDetailBinding
+    val detailViewModel by viewModels<DetailViewModel>() {
+        ViewModelFactory.getInstance(application)
+    }
+    private lateinit var user: UserEntity
+    private var isFavorite = false
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityDetailBinding = ActivityDetailBinding.inflate(layoutInflater)
         setContentView(activityDetailBinding.root)
 
-        val login = intent.getStringExtra(EXTRA_USER)
+        user = intent.getParcelableExtra(EXTRA_USER)!!
 
-        val detailViewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(DetailViewModel::class.java)
-
-        detailViewModel.getDetailUser(login!!)
+        detailViewModel.getDetailUser(user.username)
 
         detailViewModel.isLoading.observe(this) {
             showLoading(it)
@@ -40,6 +44,33 @@ class DetailActivity : AppCompatActivity() {
             setDetailUser(detailUser)
         }
 
+        detailViewModel.getFavoriteUserByUsername(user.username)
+            .observe(this@DetailActivity) { isFav ->
+                isFavorite = isFav.isNotEmpty()
+                if (isFavorite== false){
+                    activityDetailBinding.fabFavorite.setImageResource(R.drawable.baseline_favorite_border_24)
+                } else {
+                    activityDetailBinding.fabFavorite.setImageResource(R.drawable.baseline_favorite_24)
+                }
+            }
+
+        activityDetailBinding.fabFavorite.setOnClickListener {
+                if (isFavorite) {
+                    detailViewModel.delete(user)
+                    makeText(
+                        this@DetailActivity,
+                        "${user.username} have been deleted from Users Favorite ",
+                        Toast.LENGTH_LONG
+                    ).show()
+                } else{
+                    detailViewModel.insert(user)
+                    makeText(
+                        this@DetailActivity,
+                        "${user.username} have been add from Users Favorite",
+                        Toast.LENGTH_LONG
+                    ).show()
+                }
+        }
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)
         viewPager.adapter = sectionsPagerAdapter
@@ -47,7 +78,7 @@ class DetailActivity : AppCompatActivity() {
         TabLayoutMediator(tabs, viewPager) { tab, position ->
             tab.text = resources.getString(TAB_TITLES[position])
         }.attach()
-        sectionsPagerAdapter.username = login
+        sectionsPagerAdapter.username = user.username
     }
 
     private fun setDetailUser(detailUser: DetailUserResponse) {
@@ -61,7 +92,7 @@ class DetailActivity : AppCompatActivity() {
             .into(activityDetailBinding.ivPhotoDetail)
 
         val actionBar = supportActionBar
-        actionBar!!.title= "${detailUser?.name}"
+        actionBar!!.title = "${detailUser.name}"
         actionBar.setDisplayHomeAsUpEnabled(true)
     }
 
@@ -72,6 +103,7 @@ class DetailActivity : AppCompatActivity() {
             activityDetailBinding.progressBarDetail.visibility = View.GONE
         }
     }
+
     override fun onSupportNavigateUp(): Boolean {
         onBackPressed()
         return true
@@ -79,6 +111,7 @@ class DetailActivity : AppCompatActivity() {
 
     companion object {
         const val EXTRA_USER = "extra_user"
+
         @StringRes
         private val TAB_TITLES = intArrayOf(
             R.string.tab_text_1,

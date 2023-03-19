@@ -8,7 +8,7 @@ import com.james.submissiononefundamentalandroiddicoding.FollowFragment
 
 
 class SectionsPagerAdapter(activity: AppCompatActivity) : FragmentStateAdapter(activity) {
-    var username : String = ""
+    var username: String? = ""
     override fun createFragment(position: Int): Fragment {
         val fragment = FollowFragment()
 

@@ -13,4 +13,9 @@
     <string name="name_uknown">Name Uknown</string>
     <string name="followerss">followers</string>
     <string name="following">Following</string>
+    <string name="favorite">Favorite Users</string>
+    <string name="favorite_users">Favorite Users</string>
+    <string name="Setting">setting</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="setting">Setting</string>
 </resources>

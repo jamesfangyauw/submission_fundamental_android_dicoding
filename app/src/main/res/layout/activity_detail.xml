@@ -25,7 +25,6 @@
         android:layout_marginTop="20dp"
         android:text="@string/name_uknown"
         android:textAlignment="center"
-        android:textColor="#1B1919"
         android:textSize="20sp"
         android:textStyle="bold"
         app:layout_constraintEnd_toEndOf="@+id/iv_photo_detail"
@@ -39,10 +38,10 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
         android:text="@string/username_unknown"
-        android:textSize="16sp"
-        android:textColor="#1B1919"
-        android:textStyle="italic"
         android:textAlignment="center"
+
+        android:textSize="16sp"
+        android:textStyle="italic"
         app:layout_constraintEnd_toEndOf="@+id/tv_name_detail"
         app:layout_constraintHorizontal_bias="0.242"
         app:layout_constraintStart_toStartOf="@+id/tv_name_detail"
@@ -68,8 +67,8 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:text="@string/followerss"
-        android:textColor="#1B1919"
         android:textAlignment="center"
+
         app:layout_constraintBottom_toBottomOf="@+id/tv_username_detail"
         app:layout_constraintEnd_toStartOf="@+id/tv_username_detail" />
 
@@ -77,12 +76,26 @@
         android:id="@+id/tvFollowing"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/following"
-        android:textColor="#1B1919"
-        android:textAlignment="center"
         android:layout_marginStart="8dp"
+        android:text="@string/following"
+        android:textAlignment="center"
+
         app:layout_constraintBottom_toBottomOf="@+id/tv_username_detail"
         app:layout_constraintStart_toEndOf="@+id/tv_username_detail" />
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_favorite"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:clickable="true"
+        android:contentDescription="@string/tab_layout"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintVertical_bias="1.0"
+        app:srcCompat="@drawable/baseline_favorite_border_24" />
 
     <com.google.android.material.tabs.TabLayout
         android:id="@+id/tabs"
@@ -91,11 +104,11 @@
         android:layout_marginTop="15dp"
         android:background="@color/colorWhite"
         android:contentDescription="@string/tab_layout"
-        app:tabIndicatorColor="@color/colorBlueSoft"
-        app:tabSelectedTextColor="@color/colorBlueSoft"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/tv_username_detail"
+        app:tabIndicatorColor="@color/orange_light"
+        app:tabSelectedTextColor="@color/orange_light"
         app:tabTextColor="@color/colorGreySoft2" />
 
     <androidx.viewpager2.widget.ViewPager2
@@ -104,8 +117,11 @@
         android:layout_height="450dp"
         android:layout_below="@+id/tabs"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tabs" />
+        app:layout_constraintTop_toBottomOf="@id/tabs">
+
+    </androidx.viewpager2.widget.ViewPager2>
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

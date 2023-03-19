@@ -14,13 +14,19 @@
         android:theme="@style/Theme.SubmissionOneFundamentalAndroidDicoding"
         tools:targetApi="31">
         <activity
+            android:name=".SettingActivity"
+            android:exported="false" />
+        <activity
+            android:name=".FavoriteActivity"
+            android:exported="false" />
+        <activity
             android:name=".DetailActivity"
-            android:exported="false"
-            android:configChanges="keyboardHidden|orientation|screenSize"/>
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="false" />
         <activity
             android:name=".MainActivity"
-            android:exported="true"
-            android:configChanges="keyboardHidden|orientation|screenSize">
+            android:configChanges="keyboardHidden|orientation|screenSize"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

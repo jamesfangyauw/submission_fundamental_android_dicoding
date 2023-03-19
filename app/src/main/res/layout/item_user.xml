@@ -11,7 +11,7 @@
     android:layout_marginTop="4dp"
     android:layout_marginEnd="8dp"
     android:layout_marginBottom="4dp"
-    card_view:cardCornerRadius="4dp" >
+    card_view:cardCornerRadius="4dp">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -38,7 +38,6 @@
             android:layout_marginTop="12dp"
             android:layout_marginEnd="8dp"
             android:layout_marginBottom="16dp"
-            android:textColor="#1E1C1C"
             android:textSize="16sp"
             android:textStyle="bold"
             card_view:layout_constraintBottom_toBottomOf="@+id/img_item_photo"

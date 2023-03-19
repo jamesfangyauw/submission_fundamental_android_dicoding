@@ -12,10 +12,10 @@ class RecyclerViewAdapter(private val listItem: List<ItemsItem>) :
     private lateinit var itemUserBinding: ItemUserBinding
     private lateinit var onItemClickCallback: OnItemClickCallback
 
-
-    fun setOnItemClickCallback(onItemClickCallback : OnItemClickCallback){
+    fun setOnItemClickCallback(onItemClickCallback: OnItemClickCallback) {
         this.onItemClickCallback = onItemClickCallback
     }
+
     class ViewHolder(var itemUserBinding: ItemUserBinding) :
         RecyclerView.ViewHolder(itemUserBinding.root)
 
@@ -36,6 +36,6 @@ class RecyclerViewAdapter(private val listItem: List<ItemsItem>) :
         Glide.with(holder.itemView.context).load(photo).circleCrop()
             .into(holder.itemUserBinding.imgItemPhoto)
         holder.itemUserBinding.tvItemUsername.text = username
-        holder.itemView.setOnClickListener{onItemClickCallback.onItemClicked(listItem[holder.adapterPosition])}
+        holder.itemView.setOnClickListener { onItemClickCallback.onItemClicked(listItem[holder.adapterPosition]) }
     }
 }

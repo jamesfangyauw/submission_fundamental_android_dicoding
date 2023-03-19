@@ -3,21 +3,29 @@ package com.james.submissiononefundamentalandroiddicoding
 import android.app.SearchManager
 import android.content.Context
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
+import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.james.submissiononefundamentalandroiddicoding.adapter.RecyclerViewAdapter
 import com.james.submissiononefundamentalandroiddicoding.databinding.ActivityMainBinding
+import com.james.submissiononefundamentalandroiddicoding.db.UserEntity
 import com.james.submissiononefundamentalandroiddicoding.model.ItemsItem
+import com.james.submissiononefundamentalandroiddicoding.viewmodel.DetailViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.MainViewModel
+import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModel
+import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
     private lateinit var activityMainBinding: ActivityMainBinding
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
@@ -28,12 +36,25 @@ class MainActivity : AppCompatActivity() {
             ViewModelProvider.NewInstanceFactory()
         )[MainViewModel::class.java]
 
-        mainViewModel.isLoading.observe(this){isLoading ->
+        mainViewModel.isLoading.observe(this) { isLoading ->
             showLoading(isLoading)
         }
 
-        mainViewModel.listUser.observe(this){listUser ->
+        mainViewModel.listUser.observe(this) { listUser ->
             setListUser(listUser)
+        }
+
+
+        val pref = SettingPreferences.getInstance(dataStore)
+        val settingViewModel = ViewModelProvider(this, SettingViewModelFactory(pref))[SettingViewModel::class.java]
+
+        settingViewModel.getThemeSettings().observe(this
+        ) { isDarkModeActive: Boolean ->
+            if (isDarkModeActive) {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+            } else {
+                AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_NO)
+            }
         }
     }
 
@@ -63,28 +84,43 @@ class MainActivity : AppCompatActivity() {
         return true
     }
 
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when (item.itemId) {
+            R.id.favorite -> {
+                val intentToFavorite = Intent(this@MainActivity, FavoriteActivity::class.java)
+                startActivity(intentToFavorite)
+            }
+            R.id.setting -> {
+                val intentToSetting = Intent(this@MainActivity, SettingActivity::class.java)
+                startActivity(intentToSetting)
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
     private fun showLoading(isLoading: Boolean) {
-        if (isLoading){
+        if (isLoading) {
             activityMainBinding.progressBarActivtiy.visibility = View.VISIBLE
-        } else{
+        } else {
             activityMainBinding.progressBarActivtiy.visibility = View.GONE
         }
     }
 
     private fun setListUser(users: List<ItemsItem>) {
-        activityMainBinding.rvItem.layoutManager=LinearLayoutManager(this)
+        activityMainBinding.rvItem.layoutManager = LinearLayoutManager(this)
         val listUser = ArrayList<ItemsItem>()
-        for (user in users){
-            val item = ItemsItem(user.login,user.avatarUrl)
+        for (user in users) {
+            val item = ItemsItem(user.login, user.avatarUrl)
             listUser.add(item)
         }
         val adapter = RecyclerViewAdapter(listUser)
         activityMainBinding.rvItem.adapter = adapter
 
-        adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback{
+        adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ItemsItem) {
+                val user = UserEntity(data.login, data.avatarUrl) as UserEntity
                 val intentToDetail = Intent(this@MainActivity, DetailActivity::class.java)
-                intentToDetail.putExtra(DetailActivity.EXTRA_USER, data.login)
+                intentToDetail.putExtra(DetailActivity.EXTRA_USER, user)
                 startActivity(intentToDetail)
             }
         })
