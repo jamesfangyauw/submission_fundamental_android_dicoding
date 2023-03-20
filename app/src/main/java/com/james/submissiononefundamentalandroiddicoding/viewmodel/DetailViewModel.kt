@@ -14,7 +14,7 @@ import retrofit2.Callback
 import retrofit2.Response
 
 
-class DetailViewModel (application: Application) : ViewModel() {
+class DetailViewModel(application: Application) : ViewModel() {
     private val mUserRepository: UserRepository = UserRepository(application)
 
     private val _isLoading = MutableLiveData<Boolean>()
@@ -54,8 +54,8 @@ class DetailViewModel (application: Application) : ViewModel() {
         mUserRepository.delete(user)
     }
 
-    fun getFavoriteUserByUsername (username : String) : LiveData<List<UserEntity>>{
-       return mUserRepository.getFavoriteUserByUsername(username)
+    fun getFavoriteUserByUsername(username: String): LiveData<List<UserEntity>> {
+        return mUserRepository.getFavoriteUserByUsername(username)
     }
 
     companion object {

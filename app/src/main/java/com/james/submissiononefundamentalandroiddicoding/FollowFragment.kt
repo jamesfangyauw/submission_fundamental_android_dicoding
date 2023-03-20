@@ -5,6 +5,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -55,10 +56,13 @@ class FollowFragment : Fragment() {
         }
     }
 
-    private fun setListFollow(followings: List<ItemsItem>) {
+    private fun setListFollow(follow: List<ItemsItem>) {
+        if(follow.isEmpty()){
+            Toast.makeText(activity, "No Users", Toast.LENGTH_SHORT).show()
+        }
         followFragmentBinding.rvItemFragment.layoutManager = LinearLayoutManager(requireActivity())
         val listUser = ArrayList<ItemsItem>()
-        for (user in followings) {
+        for (user in follow) {
             val item = ItemsItem(user.login, user.avatarUrl)
             listUser.add(item)
         }

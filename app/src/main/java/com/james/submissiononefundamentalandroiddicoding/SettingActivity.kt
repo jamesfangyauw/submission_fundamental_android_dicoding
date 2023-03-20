@@ -12,7 +12,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.switchmaterial.SwitchMaterial
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModelFactory
-import com.james.submissiononefundamentalandroiddicoding.viewmodel.ViewModelFactory
+
 
 val Context.dataStore: DataStore<Preferences> by preferencesDataStore(name = "settings")
 

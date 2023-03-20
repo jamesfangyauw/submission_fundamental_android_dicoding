@@ -47,7 +47,7 @@ class DetailActivity : AppCompatActivity() {
         detailViewModel.getFavoriteUserByUsername(user.username)
             .observe(this@DetailActivity) { isFav ->
                 isFavorite = isFav.isNotEmpty()
-                if (isFavorite== false){
+                if (isFavorite == false) {
                     activityDetailBinding.fabFavorite.setImageResource(R.drawable.baseline_favorite_border_24)
                 } else {
                     activityDetailBinding.fabFavorite.setImageResource(R.drawable.baseline_favorite_24)
@@ -55,21 +55,21 @@ class DetailActivity : AppCompatActivity() {
             }
 
         activityDetailBinding.fabFavorite.setOnClickListener {
-                if (isFavorite) {
-                    detailViewModel.delete(user)
-                    makeText(
-                        this@DetailActivity,
-                        "${user.username} have been deleted from Users Favorite ",
-                        Toast.LENGTH_LONG
-                    ).show()
-                } else{
-                    detailViewModel.insert(user)
-                    makeText(
-                        this@DetailActivity,
-                        "${user.username} have been add from Users Favorite",
-                        Toast.LENGTH_LONG
-                    ).show()
-                }
+            if (isFavorite) {
+                detailViewModel.delete(user)
+                makeText(
+                    this@DetailActivity,
+                    "${user.username} have been deleted from Users Favorite ",
+                    Toast.LENGTH_LONG
+                ).show()
+            } else {
+                detailViewModel.insert(user)
+                makeText(
+                    this@DetailActivity,
+                    "${user.username} have been add from Users Favorite",
+                    Toast.LENGTH_LONG
+                ).show()
+            }
         }
         val sectionsPagerAdapter = SectionsPagerAdapter(this)
         val viewPager: ViewPager2 = findViewById(R.id.view_pager)

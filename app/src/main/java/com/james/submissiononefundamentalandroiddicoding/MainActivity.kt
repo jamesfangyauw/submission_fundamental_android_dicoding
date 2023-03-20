@@ -7,7 +7,7 @@ import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import androidx.activity.viewModels
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
@@ -17,7 +17,6 @@ import com.james.submissiononefundamentalandroiddicoding.adapter.RecyclerViewAda
 import com.james.submissiononefundamentalandroiddicoding.databinding.ActivityMainBinding
 import com.james.submissiononefundamentalandroiddicoding.db.UserEntity
 import com.james.submissiononefundamentalandroiddicoding.model.ItemsItem
-import com.james.submissiononefundamentalandroiddicoding.viewmodel.DetailViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.MainViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModelFactory
@@ -43,7 +42,6 @@ class MainActivity : AppCompatActivity() {
         mainViewModel.listUser.observe(this) { listUser ->
             setListUser(listUser)
         }
-
 
         val pref = SettingPreferences.getInstance(dataStore)
         val settingViewModel = ViewModelProvider(this, SettingViewModelFactory(pref))[SettingViewModel::class.java]
@@ -107,6 +105,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setListUser(users: List<ItemsItem>) {
+        if (users.isEmpty()){
+            Toast.makeText(this, "Data not found, use other keyword", Toast.LENGTH_SHORT).show()
+        }
         activityMainBinding.rvItem.layoutManager = LinearLayoutManager(this)
         val listUser = ArrayList<ItemsItem>()
         for (user in users) {

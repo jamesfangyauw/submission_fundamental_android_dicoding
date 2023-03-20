@@ -18,4 +18,5 @@
     <string name="Setting">setting</string>
     <string name="dark_mode">Dark Mode</string>
     <string name="setting">Setting</string>
+    <string name="not_found">Not Found</string>
 </resources>
