@@ -23,7 +23,7 @@ class FavoriteActivity : AppCompatActivity() {
         _activityFavoriteBinding = ActivityFavoriteBinding.inflate(layoutInflater)
         setContentView(binding?.root)
 
-        val favoriteViewModel by viewModels<FavoriteViewModel>() {
+        val favoriteViewModel by viewModels<FavoriteViewModel> {
             ViewModelFactory.getInstance(application)
         }
 
@@ -44,7 +44,7 @@ class FavoriteActivity : AppCompatActivity() {
 
         adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ItemsItem) {
-                val user = UserEntity(data.login, data.avatarUrl) as UserEntity
+                val user = UserEntity(data.login, data.avatarUrl)
                 val intentToDetail = Intent(this@FavoriteActivity, DetailActivity::class.java)
                 intentToDetail.putExtra(DetailActivity.EXTRA_USER, user)
                 startActivity(intentToDetail)

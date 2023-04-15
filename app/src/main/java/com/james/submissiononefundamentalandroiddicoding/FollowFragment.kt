@@ -71,7 +71,7 @@ class FollowFragment : Fragment() {
 
         adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ItemsItem) {
-                val user = UserEntity(data.login, data.avatarUrl) as UserEntity
+                val user = UserEntity(data.login, data.avatarUrl)
                 val intentToDetail = Intent(activity, DetailActivity::class.java)
                 intentToDetail.putExtra(DetailActivity.EXTRA_USER, user)
                 startActivity(intentToDetail)

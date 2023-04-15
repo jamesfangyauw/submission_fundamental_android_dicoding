@@ -8,9 +8,6 @@ interface UserDao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insert(user : UserEntity)
 
-    @Update
-    fun update(user:UserEntity)
-
     @Delete
     fun delete(user: UserEntity)
 

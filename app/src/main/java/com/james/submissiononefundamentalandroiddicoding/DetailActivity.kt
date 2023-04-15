@@ -21,7 +21,7 @@ import com.james.submissiononefundamentalandroiddicoding.viewmodel.ViewModelFact
 class DetailActivity : AppCompatActivity() {
 
     private lateinit var activityDetailBinding: ActivityDetailBinding
-    val detailViewModel by viewModels<DetailViewModel>() {
+    val detailViewModel by viewModels<DetailViewModel> {
         ViewModelFactory.getInstance(application)
     }
     private lateinit var user: UserEntity
@@ -34,19 +34,37 @@ class DetailActivity : AppCompatActivity() {
 
         user = intent.getParcelableExtra(EXTRA_USER)!!
 
-        detailViewModel.getDetailUser(user.username)
-
-        detailViewModel.isLoading.observe(this) {
-            showLoading(it)
+        detailViewModel.getDetailUser(user.username).observe(this){result ->
+            if (result != null){
+                when (result){
+                    is Result.Loading -> activityDetailBinding.progressBarDetail.visibility = View.VISIBLE
+                    is Result.Success -> {
+                        activityDetailBinding.progressBarDetail.visibility = View.GONE
+                        setDetailUser(result.data)
+                    }
+                    is Result.Error -> {
+                        activityDetailBinding.progressBarDetail.visibility = View.GONE
+                        makeText(
+                            this@DetailActivity,
+                            "Terjadi kesalahan" + result.error,
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                }
+            }
         }
 
-        detailViewModel.detailUser.observe(this) { detailUser ->
-            setDetailUser(detailUser)
-        }
+//        detailViewModel.isLoading.observe(this) {
+//            showLoading(it)
+//        }
+//
+//        detailViewModel.detailUser.observe(this) { detailUser ->
+//            setDetailUser(detailUser)
+//        }
 
         detailViewModel.getFavoriteUserByUsername(user.username)
-            .observe(this@DetailActivity) { isFav ->
-                isFavorite = isFav.isNotEmpty()
+            .observe(this@DetailActivity) { listFavByUsername ->
+                isFavorite = listFavByUsername.isNotEmpty()
                 if (isFavorite == false) {
                     activityDetailBinding.fabFavorite.setImageResource(R.drawable.baseline_favorite_border_24)
                 } else {

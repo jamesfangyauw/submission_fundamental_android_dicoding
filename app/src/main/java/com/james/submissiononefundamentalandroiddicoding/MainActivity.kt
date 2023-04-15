@@ -8,6 +8,7 @@ import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.app.AppCompatDelegate
 import androidx.appcompat.widget.SearchView
@@ -20,6 +21,7 @@ import com.james.submissiononefundamentalandroiddicoding.model.ItemsItem
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.MainViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModel
 import com.james.submissiononefundamentalandroiddicoding.viewmodel.SettingViewModelFactory
+import com.james.submissiononefundamentalandroiddicoding.viewmodel.ViewModelFactory
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,23 +32,26 @@ class MainActivity : AppCompatActivity() {
         activityMainBinding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(activityMainBinding.root)
 
-        val mainViewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        )[MainViewModel::class.java]
+//        val mainViewModel = ViewModelProvider(
+//            this,
+//            ViewModelProvider.NewInstanceFactory()
+//        )[MainViewModel::class.java]
 
-        mainViewModel.isLoading.observe(this) { isLoading ->
-            showLoading(isLoading)
-        }
+//        mainViewModel.isLoading.observe(this) { isLoading ->
+//            showLoading(isLoading)
+//        }
+//
+//        mainViewModel.listUser.observe(this) { listUser ->
+//            setListUser(listUser)
+//        }
 
-        mainViewModel.listUser.observe(this) { listUser ->
-            setListUser(listUser)
-        }
 
         val pref = SettingPreferences.getInstance(dataStore)
-        val settingViewModel = ViewModelProvider(this, SettingViewModelFactory(pref))[SettingViewModel::class.java]
+        val settingViewModel =
+            ViewModelProvider(this, SettingViewModelFactory(pref))[SettingViewModel::class.java]
 
-        settingViewModel.getThemeSettings().observe(this
+        settingViewModel.getThemeSettings().observe(
+            this
         ) { isDarkModeActive: Boolean ->
             if (isDarkModeActive) {
                 AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
@@ -59,10 +64,7 @@ class MainActivity : AppCompatActivity() {
     override fun onCreateOptionsMenu(menu: Menu): Boolean {
         val inflater = menuInflater
         inflater.inflate(R.menu.menu, menu)
-        val mainViewModel = ViewModelProvider(
-            this,
-            ViewModelProvider.NewInstanceFactory()
-        ).get(MainViewModel::class.java)
+        val mainViewModel by viewModels<MainViewModel> { ViewModelFactory.getInstance(application) }
 
         val searchManager = getSystemService(Context.SEARCH_SERVICE) as SearchManager
         val searchView = menu.findItem(R.id.search).actionView as SearchView
@@ -70,7 +72,26 @@ class MainActivity : AppCompatActivity() {
         searchView.queryHint = resources.getString(R.string.search_hint)
         searchView.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
             override fun onQueryTextSubmit(query: String): Boolean {
-                mainViewModel.searchUser(query)
+                mainViewModel.searchUser(query).observe(this@MainActivity) { result ->
+                    if (result != null) {
+                        when (result) {
+                            is Result.Loading -> activityMainBinding.progressBarActivtiy.visibility =
+                                View.VISIBLE
+                            is Result.Success -> {
+                                activityMainBinding.progressBarActivtiy.visibility = View.GONE
+                                setListUser(result.data)
+                            }
+                            is Result.Error -> {
+                                activityMainBinding.progressBarActivtiy.visibility = View.GONE
+                                Toast.makeText(
+                                    this@MainActivity,
+                                    "Terjadi kesalahan" + result.error,
+                                    Toast.LENGTH_SHORT
+                                ).show()
+                            }
+                        }
+                    }
+                }
                 searchView.clearFocus()
                 return true
             }
@@ -105,9 +126,9 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun setListUser(users: List<ItemsItem>) {
-        if (users.isEmpty()){
-            Toast.makeText(this, "Data not found, use other keyword", Toast.LENGTH_SHORT).show()
-        }
+//        if (users.isEmpty()){
+//            Toast.makeText(this, "Data not found, use other keyword", Toast.LENGTH_SHORT).show()
+//        }
         activityMainBinding.rvItem.layoutManager = LinearLayoutManager(this)
         val listUser = ArrayList<ItemsItem>()
         for (user in users) {
@@ -119,7 +140,7 @@ class MainActivity : AppCompatActivity() {
 
         adapter.setOnItemClickCallback(object : RecyclerViewAdapter.OnItemClickCallback {
             override fun onItemClicked(data: ItemsItem) {
-                val user = UserEntity(data.login, data.avatarUrl) as UserEntity
+                val user = UserEntity(data.login, data.avatarUrl)
                 val intentToDetail = Intent(this@MainActivity, DetailActivity::class.java)
                 intentToDetail.putExtra(DetailActivity.EXTRA_USER, user)
                 startActivity(intentToDetail)

@@ -27,6 +27,8 @@ class ViewModelFactory private constructor(private val mApplication: Application
             return DetailViewModel(mApplication) as T
         } else if (modelClass.isAssignableFrom(FavoriteViewModel::class.java)) {
             return FavoriteViewModel(mApplication) as T
+        } else if (modelClass.isAssignableFrom(MainViewModel::class.java)) {
+            return MainViewModel(mApplication) as T
         }
         throw IllegalArgumentException("Unknown ViewModel class: ${modelClass.name}")
     }
